@@ -1,48 +1,63 @@
-﻿using CodeBase.Infrastructure.Factory;
+﻿using Cannon;
+using CodeBase.Infrastructure.AssetManagement;
+using CodeBase.Infrastructure.Factory;
+using CodeBase.Infrastructure.Services.UI;
 using CodeBase.StaticData;
-using UnityEngine.SceneManagement;
 
 namespace CodeBase.Infrastructure.States
 {
-  public class LoadLevelState : IPayloadedState<string>
-  {
-    private readonly GameStateMachine _gameStateMachine;
-    private readonly SceneLoader _sceneLoader;
-    private readonly IGameFactory _gameFactory;
-    private readonly IStaticDataService _staticData;
-
-
-    public LoadLevelState(GameStateMachine gameStateMachine, SceneLoader sceneLoader,
-      IGameFactory gameFactory, IStaticDataService staticData)
+    public class LoadLevelState : IPayloadedState<string>
     {
-        _gameStateMachine = gameStateMachine;
-      _sceneLoader = sceneLoader;
-      _gameFactory = gameFactory;
-      _staticData = staticData;
-    }
+        private readonly GameStateMachine _gameStateMachine;
+        private readonly SceneLoader _sceneLoader;
+        private readonly IGameFactory _gameFactory;
+        private readonly IStaticDataService _staticData;
+        private readonly ICustomPhysicsService _customPhysicsService;
+        private readonly IUIService _uiService;
+        
+        private CannonController _cannonController;
 
-    public void Enter(string sceneName)
-    {
-        _gameFactory.Cleanup();
-        _sceneLoader.Load(sceneName, OnLoaded);
-    }
+        public LoadLevelState(GameStateMachine gameStateMachine, SceneLoader sceneLoader,
+            IGameFactory gameFactory, IStaticDataService staticData , ICustomPhysicsService customPhysicsService
+            , IUIService uiService)
+        {
+            _uiService = uiService;
+            _customPhysicsService = customPhysicsService;
+            _gameStateMachine = gameStateMachine;
+            _sceneLoader = sceneLoader;
+            _gameFactory = gameFactory;
+            _staticData = staticData;
+        }
 
-    public void Exit()
-    {
-    }
+        public void Enter(string sceneName)
+        {
+            _gameFactory.Cleanup();
+            _sceneLoader.Load(sceneName, OnLoaded);
+        }
 
-    private void OnLoaded()
-    {
-      InitGameWorld();
-      _gameStateMachine.Enter<GameLoopState>();
-    }
+        public void Exit()
+        {
+        }
 
-    private void InitGameWorld()
-    {
-      LevelStaticData levelData = LevelStaticData();
-    }
+        private void OnLoaded()
+        {
+            InitGameWorld();
+            _gameStateMachine.Enter<GameLoopState>();
+        }
+        
+        private void InitGameWorld()
+        {
+            LevelStaticData levelData = LevelStaticData();
 
-    private LevelStaticData LevelStaticData() =>
-      _staticData.ForLevel(SceneManager.GetActiveScene().name);
-  }
+            _cannonController = _gameFactory.GetCannon(levelData.CannonSpawnPos);
+            _gameFactory.Instantiate(AssetsAddress.ObstaclesPath, levelData.ObstacleSpawnPos);
+            
+            _customPhysicsService.Init(_staticData.GetStaticData<CannonStaticData>());
+            
+            _uiService.LoadPowerPanel();
+        }
+
+        private LevelStaticData LevelStaticData() =>
+            _staticData.GetStaticData<LevelStaticData>();
+    }
 }

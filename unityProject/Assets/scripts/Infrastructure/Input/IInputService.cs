@@ -2,16 +2,14 @@ using System;
 using CodeBase.Infrastructure.Services;
 using UnityEngine;
 
-namespace CodeBase.Infrastructure.Input
+namespace CodeBase.Infrastructure
 {
   public interface IInputService : IService
   {
-    public Action<Vector2> OnPointerDown { get; set; }
-    public Action<Vector2> OnPointerUp { get; set; }
-    public Action<Vector2> OnPointerDrag { get; set; }
+    public Action OnClickFire { get; set; }
+    public Action<Vector2> OnRotate { get; set; }
 
-    public void PointerDown(Vector2 pos);
-    public void PointerUp(Vector2 pos);
-    public void Drag(Vector2 pos);
+    public void Fire();
+    public void Rotate(Vector2 dir);
   }
 }

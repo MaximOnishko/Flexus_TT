@@ -4,21 +4,27 @@ using UnityEngine;
 
 namespace CodeBase.StaticData
 {
-  public class StaticDataService : IStaticDataService
-  {
-    private const string StaticDataLevelsPath = "StaticData/Levels";
-    private readonly Dictionary<string, LevelStaticData> _levels;
-
-    public StaticDataService()
+    public class StaticDataService : IStaticDataService
     {
-      _levels = Resources
-        .LoadAll<LevelStaticData>(StaticDataLevelsPath)
-        .ToDictionary(x => x.LevelKey, x => x);
+        private const string StaticDataPath = "StaticData";
+        
+        private readonly List<ScriptableObject> _levels;
+
+        public StaticDataService()
+        {
+            _levels = Resources
+                .LoadAll<ScriptableObject>(StaticDataPath)
+                .ToList();
+        }
+
+        public T GetStaticData<T>() where T : ScriptableObject
+        {
+            var staticData =  _levels.FirstOrDefault(x => x is T) as T;
+
+            if (staticData == null)
+                throw new System.Exception($"StaticData not found for {typeof(T)}");
+            
+            return staticData;
+        }
     }
-      
-    public LevelStaticData ForLevel(string sceneKey) =>
-      _levels.TryGetValue(sceneKey,out LevelStaticData staticData) 
-        ? staticData 
-        : null;
-  }
 }

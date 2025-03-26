@@ -1,20 +1,27 @@
-﻿namespace CodeBase.Infrastructure.States
+﻿using Gameplay.GameInput;
+using UnityEngine;
+
+namespace CodeBase.Infrastructure.States
 {
-  public class GameLoopState : IState
-  {
-    public GameLoopState(GameStateMachine gameStateMachine)
+    public class GameLoopState : IState
     {
-      
-    }
+        public GameLoopState(GameStateMachine gameStateMachine)
+        {
+        }
 
-    public void Exit()
-    {
-      
-    }
+        public void Exit()
+        {
+        }
 
-    public void Enter()
-    {
-      
+        public void Enter()
+        {
+            AddInputProvider();
+        }
+
+        private void AddInputProvider()
+        {
+            var go = new GameObject("[InputHandler]");
+            go.AddComponent<InputHandler>();
+        }
     }
-  }
 }
