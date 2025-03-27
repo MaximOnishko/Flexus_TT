@@ -2,6 +2,7 @@
 using CodeBase.Infrastructure.Services;
 using CodeBase.Infrastructure.Services.UI;
 using CodeBase.StaticData;
+using OpenCover.Framework.Model;
 using UnityEngine;
 
 namespace Cannon
@@ -32,10 +33,16 @@ namespace Cannon
         
         private void Subscribe()
         {
-            _uiService.OnPowerChanged += UpdatePower;
+            _inputService.OnClickFire += Fire;
             _inputService.OnRotate += RotateCannon;
+            _uiService.OnPowerChanged += UpdatePower;
         }
-        
+
+        private void Fire()
+        {
+            
+        }
+
         private void RotateCannon(Vector2 pointPos)
         {
             _view.RotateTo(pointPos);

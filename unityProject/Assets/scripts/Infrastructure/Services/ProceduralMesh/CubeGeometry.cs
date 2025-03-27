@@ -2,7 +2,7 @@
 
 public static class CubeGeometry
 {
-    public static Vector3[] originalVertices =
+    public static readonly Vector3[] originalVertices =
     {
         new Vector3(-0.5f, -0.5f, -0.5f),
         new Vector3(-0.5f, 0.5f, -0.5f),
@@ -15,7 +15,7 @@ public static class CubeGeometry
         new Vector3(0.5f, -0.5f, 0.5f),
     };
 
-    public static int[] triangles = new[]
+    public static readonly int[] triangles = new[]
     {
         0, 1, 2, 2, 3, 0,
         1, 5, 6, 6, 2, 1,

@@ -4,6 +4,7 @@ using CodeBase.Infrastructure.Services;
 using CodeBase.Infrastructure.Services.Data;
 using CodeBase.Infrastructure.Services.UI;
 using CodeBase.StaticData;
+using Gameplay.BulletFactory;
 
 namespace CodeBase.Infrastructure.States
 {
@@ -46,6 +47,7 @@ namespace CodeBase.Infrastructure.States
             _services.RegisterSingle<ICustomPhysicsService>(new CustomPhysicsService());
             _services.RegisterSingle<IUIService>(new UIService());
             _services.RegisterSingle<IInputService>(new StandaloneInput());
+            _services.RegisterSingle<IBulletPool>(new BulletPoolService(_services.Single<IGameFactory>()));
         }
     }
 }

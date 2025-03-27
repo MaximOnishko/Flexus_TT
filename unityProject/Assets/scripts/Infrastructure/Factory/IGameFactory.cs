@@ -12,5 +12,7 @@ namespace CodeBase.Infrastructure.Factory
         CannonController GetCannon(Vector3 position);
         T Instantiate<T>(string prefabPath) where T : MonoBehaviour;
         T Instantiate<T>(string prefabPath, Vector3 position) where T : MonoBehaviour;
+        T Instantiate<T>(string prefabPath, Vector3 position, Transform parent) where T : MonoBehaviour;
+        GameObject Instantiate(string prefabPath, Vector3 position, Transform parent);
     }
 }

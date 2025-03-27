@@ -1,13 +1,11 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class Bullet : MonoBehaviour
 {
-    public MeshFilter meshFilter;
+    [SerializeField] private MeshFilter meshFilter;
     public float offset = 0.1f;
     public float timeStep = 0.01f;
     
@@ -15,12 +13,12 @@ public class Bullet : MonoBehaviour
     private Coroutine moveCoroutine;
     private float _bulletSpeed;
 
-    private void Start()
+    
+    public void SetMesh(Mesh mesh)
     {
-        meshFilter.mesh = GenerateRandomCube();
+        meshFilter.mesh = mesh;
     }
     
-
     public void StartMove(List<Vector3> points, float bulletSpeed)
     {
         _bulletSpeed = bulletSpeed;

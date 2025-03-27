@@ -3,6 +3,7 @@ using CodeBase.Infrastructure.AssetManagement;
 using CodeBase.Infrastructure.Factory;
 using CodeBase.Infrastructure.Services.UI;
 using CodeBase.StaticData;
+using Gameplay.BulletFactory;
 
 namespace CodeBase.Infrastructure.States
 {
@@ -16,11 +17,13 @@ namespace CodeBase.Infrastructure.States
         private readonly IUIService _uiService;
         
         private CannonController _cannonController;
+        private IBulletPool _bulletPool;
 
         public LoadLevelState(GameStateMachine gameStateMachine, SceneLoader sceneLoader,
             IGameFactory gameFactory, IStaticDataService staticData , ICustomPhysicsService customPhysicsService
-            , IUIService uiService)
+            , IUIService uiService, IBulletPool bulletPool)
         {
+            _bulletPool = bulletPool;
             _uiService = uiService;
             _customPhysicsService = customPhysicsService;
             _gameStateMachine = gameStateMachine;
@@ -53,6 +56,7 @@ namespace CodeBase.Infrastructure.States
             _gameFactory.Instantiate(AssetsAddress.ObstaclesPath, levelData.ObstacleSpawnPos);
             
             _customPhysicsService.Init(_staticData.GetStaticData<CannonStaticData>());
+            _bulletPool.Init();
             
             _uiService.LoadPowerPanel();
         }

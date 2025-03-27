@@ -4,6 +4,7 @@ using CodeBase.Infrastructure.Factory;
 using CodeBase.Infrastructure.Services;
 using CodeBase.Infrastructure.Services.UI;
 using CodeBase.StaticData;
+using Gameplay.BulletFactory;
 
 namespace CodeBase.Infrastructure.States
 {
@@ -21,7 +22,7 @@ namespace CodeBase.Infrastructure.States
                 services.Single<IGameFactory>(),
                 services.Single<IStaticDataService>(), 
                 services.Single<ICustomPhysicsService>(),
-                services.Single<IUIService>()),
+                services.Single<IUIService>(), services.Single<IBulletPool>()),
             [typeof(GameLoopState)] = new GameLoopState(this)
         };
     }
