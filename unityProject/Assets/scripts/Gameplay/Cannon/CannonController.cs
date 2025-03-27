@@ -1,5 +1,6 @@
 ﻿using CodeBase.Infrastructure;
 using CodeBase.Infrastructure.Services;
+using CodeBase.Infrastructure.Services.Camera;
 using CodeBase.Infrastructure.Services.UI;
 using CodeBase.StaticData;
 using Gameplay.Bullet.BulletService;
@@ -14,12 +15,14 @@ namespace Cannon
         private readonly ICustomPhysicsService _customPhysics;
         private readonly IUIService _uiService;
         private readonly IBulletService _bulletService;
+        private readonly ICameraService _cameraService;
 
         private CannonView _view;
         private CannonData _data;
 
         public CannonController()
         {
+            _cameraService = AllServices.Container.Single<ICameraService>();
             _uiService = AllServices.Container.Single<IUIService>();
             _inputService = AllServices.Container.Single<IInputService>();
             _customPhysics = AllServices.Container.Single<ICustomPhysicsService>();
@@ -43,7 +46,9 @@ namespace Cannon
 
         private void Fire()
         {
+            _cameraService.ShakeCamera();
             _view.Animator.PlayAttack();
+            
             _bulletService.Fire(
                 _customPhysics.GetTrajectoryData(_view.SpawnBulletPos.position, _view.SpawnBulletPos.forward,
                     _data.Power), _data.BulletSpeed);

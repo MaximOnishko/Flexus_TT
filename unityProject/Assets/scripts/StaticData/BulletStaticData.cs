@@ -9,7 +9,7 @@ namespace CodeBase.StaticData
         [field: SerializeField] public float BulletMeshRandomOffset { get; private set; }
         [field: SerializeField] public Texture2D HitTexture { get; private set; }
         [field: SerializeField] public float MovingTimeStep { get; private set; }
-        
+
         [field: SerializeField] public LayerMask HitLayer { get; private set; }
     }
 }

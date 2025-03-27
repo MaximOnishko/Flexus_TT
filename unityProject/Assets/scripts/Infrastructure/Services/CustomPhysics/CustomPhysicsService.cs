@@ -1,3 +1,5 @@
+using CodeBase.Infrastructure.Services;
+using CodeBase.Infrastructure.Services.Camera;
 using CodeBase.StaticData;
 using UnityEngine;
 
@@ -6,9 +8,15 @@ namespace Infrastructure.Services.CustomPhysics
     public class CustomPhysicsService : ICustomPhysicsService
     {
         private readonly Vector3 _gravity = new(0, -9.81f, 0);
+        private readonly ICameraService _cameraService;
 
         private CannonStaticData _cannonStaticData;
 
+        public CustomPhysicsService()
+        {
+            _cameraService = AllServices.Container.Single<ICameraService>();
+        }
+        
         public void Init(CannonStaticData cannonStaticData)
         {
             _cannonStaticData = cannonStaticData;
@@ -63,9 +71,9 @@ namespace Infrastructure.Services.CustomPhysics
 
         private void AddHitData(RaycastHit collision, ref TrajectoryData trajectoryData, int bounceCount, int i)
         {
-            Vector3 direction = (collision.point - Camera.main.transform.position).normalized;
+            Vector3 direction = (collision.point - _cameraService.Camera.transform.position).normalized;
 
-            if (Physics.Raycast(Camera.main.transform.position, direction, out RaycastHit hit, 100f,
+            if (Physics.Raycast(_cameraService.Camera.transform.position, direction, out RaycastHit hit, 100f,
                     _cannonStaticData.BulletStaticData.HitLayer))
             {
                 trajectoryData.HitDatas[bounceCount] = new TrajectoryData.HitData

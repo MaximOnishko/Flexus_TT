@@ -1,6 +1,7 @@
 ﻿using CodeBase.Infrastructure.AssetManagement;
 using CodeBase.Infrastructure.Factory;
 using CodeBase.Infrastructure.Services;
+using CodeBase.Infrastructure.Services.Camera;
 using CodeBase.Infrastructure.Services.CustomDrawer;
 using CodeBase.Infrastructure.Services.Data;
 using CodeBase.Infrastructure.Services.ProceduralMesh;
@@ -52,6 +53,7 @@ namespace CodeBase.Infrastructure.States
             _services.RegisterSingle<IAssetProvider>(new AssetProvider());
             _services.RegisterSingle<IGameFactory>(new GameFactory(_services.Single<IAssetProvider>(),
                 _services.Single<IStaticDataService>()));
+            _services.RegisterSingle<ICameraService>(new CameraService());
             _services.RegisterSingle<ICustomPhysicsService>(new CustomPhysicsService());
             _services.RegisterSingle<IUIService>(new UIService());
             _services.RegisterSingle<IInputService>(new StandaloneInput());

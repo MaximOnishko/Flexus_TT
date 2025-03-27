@@ -1,4 +1,6 @@
-﻿using Gameplay.GameInput;
+﻿using CodeBase.Infrastructure.Services;
+using CodeBase.Infrastructure.Services.Camera;
+using Gameplay.GameInput;
 using UnityEngine;
 
 namespace CodeBase.Infrastructure.States
@@ -17,7 +19,7 @@ namespace CodeBase.Infrastructure.States
         {
             AddInputProvider();
         }
-
+        
         private void AddInputProvider()
         {
             var go = new GameObject("[InputHandler]");

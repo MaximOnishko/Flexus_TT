@@ -1,10 +1,13 @@
 ﻿using Cannon;
 using CodeBase.Infrastructure.AssetManagement;
 using CodeBase.Infrastructure.Factory;
+using CodeBase.Infrastructure.Services;
+using CodeBase.Infrastructure.Services.Camera;
 using CodeBase.Infrastructure.Services.UI;
 using CodeBase.StaticData;
 using Gameplay.BulletFactory;
 using Infrastructure.Services.CustomPhysics;
+using UnityEngine;
 
 namespace CodeBase.Infrastructure.States
 {
@@ -16,9 +19,9 @@ namespace CodeBase.Infrastructure.States
         private readonly IStaticDataService _staticData;
         private readonly ICustomPhysicsService _customPhysicsService;
         private readonly IUIService _uiService;
+        private readonly IBulletPool _bulletPool;
         
         private CannonController _cannonController;
-        private IBulletPool _bulletPool;
 
         public LoadLevelState(GameStateMachine gameStateMachine, SceneLoader sceneLoader,
             IGameFactory gameFactory, IStaticDataService staticData , ICustomPhysicsService customPhysicsService
@@ -45,6 +48,7 @@ namespace CodeBase.Infrastructure.States
 
         private void OnLoaded()
         {
+            SetupCamera();
             InitGameWorld();
             _gameStateMachine.Enter<GameLoopState>();
         }
@@ -62,6 +66,12 @@ namespace CodeBase.Infrastructure.States
             _uiService.LoadPowerPanel();
         }
 
+        
+        private void SetupCamera()
+        {
+            AllServices.Container.Single<ICameraService>().SetCamera(Camera.main);
+        }
+        
         private LevelStaticData LevelStaticData() =>
             _staticData.GetStaticData<LevelStaticData>();
     }
