@@ -7,10 +7,13 @@ namespace CodeBase.Infrastructure.Services.CustomDrawer
 {
     public class RenderTextureDrawerService : IDrawerService
     {
-        private Dictionary<int, RenderTexture> _renderTextures = new();
+        private const int _hitTextureHeight = 64;
+        private const int RendererTextureSize = 512;
+        
+        private const string RenderTex = "_RenderTex";
 
+        private readonly Dictionary<int, RenderTexture> _renderTextures = new();
         private readonly BulletStaticData _bulletData;
-
 
         public RenderTextureDrawerService(IStaticDataService staticDataService)
         {
@@ -25,8 +28,6 @@ namespace CodeBase.Infrastructure.Services.CustomDrawer
 
         private RenderTexture GetRendererTexture(Collider collider)
         {
-           // Debug.Log($"{collider.GetInstanceID()}");
-            
             return _renderTextures.TryGetValue(collider.GetInstanceID(), out var texture)
                 ? texture
                 : CreateNewRenderTexture(collider);
@@ -34,39 +35,38 @@ namespace CodeBase.Infrastructure.Services.CustomDrawer
 
         private RenderTexture CreateNewRenderTexture(Collider collider)
         {
-            var rt = new RenderTexture(512, 512, 32, RenderTextureFormat.ARGB32);
+            var rt = new RenderTexture(RendererTextureSize, RendererTextureSize, 32, RenderTextureFormat.ARGB32);
             rt.Create();
 
             var meshRenderer = collider.GetComponent<MeshRenderer>();
             var newMaterial = new Material(collider.GetComponent<MeshRenderer>().material);
             meshRenderer.material = newMaterial;
 
-            newMaterial.SetTexture("_RenderTex", rt);
+            newMaterial.SetTexture(RenderTex, rt);
             ClearRenderTexture(rt);
 
             _renderTextures.Add(collider.GetInstanceID(), rt);
             return rt;
         }
 
-        void ClearRenderTexture(RenderTexture rt)
+        private void ClearRenderTexture(RenderTexture rt)
         {
             RenderTexture.active = rt;
             GL.Clear(true, true, new Color(0, 0, 0, 0));
             RenderTexture.active = null;
         }
-
-
+        
         private void DrawTexture(Vector2 uv, RenderTexture rendererTexture, float compensativeScale)
         {
             RenderTexture.active = rendererTexture;
             GL.PushMatrix();
             GL.LoadPixelMatrix(0, rendererTexture.width, rendererTexture.height, 0);
-
-            float posX = uv.x * rendererTexture.width - (64 * compensativeScale) / 2f;
-            float posY = (1 - uv.y) * rendererTexture.height - 64 / 2f;
+            
+            float posX = uv.x * rendererTexture.width - (_hitTextureHeight * compensativeScale) / 2f;
+            float posY = (1 - uv.y) * rendererTexture.height - _hitTextureHeight / 2f;
 
             Graphics.DrawTexture(
-                new Rect(posX, posY, 64 * compensativeScale, 64),
+                new Rect(posX, posY, _hitTextureHeight * compensativeScale, _hitTextureHeight),
                 _bulletData.HitTexture);
 
             GL.PopMatrix();

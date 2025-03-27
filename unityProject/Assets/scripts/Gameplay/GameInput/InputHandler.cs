@@ -8,7 +8,7 @@ namespace Gameplay.GameInput
     {
         private IInputService _inputService;
         private Vector2 _inputDirection = Vector2.zero;
-        
+
         private void Awake()
         {
             _inputService = AllServices.Container.Single<IInputService>();
@@ -16,13 +16,13 @@ namespace Gameplay.GameInput
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetKeyDown(KeyCode.Space))
                 _inputService.Fire();
 
-            _inputDirection.Set(Input.GetAxis("Vertical"),Input.GetAxis("Horizontal"));
+            _inputDirection.Set(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
 
             if (_inputDirection != Vector2.zero)
                 _inputService.Rotate(_inputDirection);
         }
     }
-}
+} 

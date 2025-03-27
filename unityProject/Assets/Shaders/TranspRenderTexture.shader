@@ -10,11 +10,12 @@ Shader "Custom/TranspRenderTexture"
     }
     SubShader
     {
-        Tags
-        {
-            "RenderType"="Transparent" "Queue"="Transparent"
-        }
+        Tags { "RenderType"="Transparent" "Queue"="Transparent" }
         LOD 200
+
+        ZWrite Off        // Prevents writing to the depth buffer
+        ZTest LEqual      // Ensures proper depth sorting
+        Blend SrcAlpha OneMinusSrcAlpha  // Standard alpha blending
 
         CGPROGRAM
         #pragma surface surf Standard alpha:blend fullforwardshadows
@@ -40,7 +41,7 @@ Shader "Custom/TranspRenderTexture"
             fixed4 renderColor = tex2D(_RenderTex, flippedUV);
 
             // Blend render texture on top of main texture
-            float alphaBlend = renderColor.a; // Alpha determines how much of RenderTex is blended
+            float alphaBlend = renderColor.a;
             fixed4 finalColor = lerp(baseColor, renderColor, alphaBlend);
 
             o.Albedo = finalColor.rgb;

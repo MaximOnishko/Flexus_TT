@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 7829909569139040148}
   - component: {fileID: 4603489853772005903}
   - component: {fileID: 1321413553190726913}
-  - component: {fileID: 3969615910801614388}
   m_Layer: 7
   m_Name: Wall
   m_TagString: Untagged
@@ -107,26 +106,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &3969615910801614388
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 231218150978861026}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fe2f558d7cd7c3448a5d7ac7c6feac6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveDownSpeed: 0.2
-  hitTextureSize: 64
-  hitTexture: {fileID: 2800000, guid: 58e8d066560ebed41a19792107efe40c, type: 3}
-  dotsTexture: {fileID: 2800000, guid: bd6eea0b2d0f61a4eb97c14c8fde55e0, type: 3}
-  meshRenderer: {fileID: 4603489853772005903}
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 128
 --- !u!1 &2612621233129752453
 GameObject:
   m_ObjectHideFlags: 0
@@ -172,7 +151,6 @@ GameObject:
   - component: {fileID: 3985163541838137942}
   - component: {fileID: 6506495475893903172}
   - component: {fileID: 6050251758128772345}
-  - component: {fileID: 1947730634080496426}
   m_Layer: 7
   m_Name: Wall (1)
   m_TagString: Untagged
@@ -267,23 +245,3 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1947730634080496426
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2652269362155745861}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fe2f558d7cd7c3448a5d7ac7c6feac6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveDownSpeed: 0.2
-  hitTextureSize: 64
-  hitTexture: {fileID: 2800000, guid: 58e8d066560ebed41a19792107efe40c, type: 3}
-  dotsTexture: {fileID: 2800000, guid: bd6eea0b2d0f61a4eb97c14c8fde55e0, type: 3}
-  meshRenderer: {fileID: 6506495475893903172}
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 128
