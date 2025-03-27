@@ -4,6 +4,7 @@ using CodeBase.Infrastructure.Factory;
 using CodeBase.Infrastructure.Services.UI;
 using CodeBase.StaticData;
 using Gameplay.BulletFactory;
+using Infrastructure.Services.CustomPhysics;
 
 namespace CodeBase.Infrastructure.States
 {

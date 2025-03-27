@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Infrastructure.Services.CustomPhysics;
+using UnityEngine;
 
 public class TrajectoryView : MonoBehaviour
 {

@@ -5,6 +5,7 @@ using CodeBase.Infrastructure.Services;
 using CodeBase.Infrastructure.Services.UI;
 using CodeBase.StaticData;
 using Gameplay.BulletFactory;
+using Infrastructure.Services.CustomPhysics;
 
 namespace CodeBase.Infrastructure.States
 {
@@ -13,11 +14,11 @@ namespace CodeBase.Infrastructure.States
     private readonly Dictionary<Type, IExitableState> _states;
     private IExitableState _activeState;
 
-    public GameStateMachine(SceneLoader sceneLoader, AllServices services)
+    public GameStateMachine(SceneLoader sceneLoader, ICoroutineRunner coroutineRunner, AllServices services)
     {
         _states = new Dictionary<Type, IExitableState>
         {
-            [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader, services),
+            [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader, coroutineRunner,services),
             [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader,
                 services.Single<IGameFactory>(),
                 services.Single<IStaticDataService>(), 

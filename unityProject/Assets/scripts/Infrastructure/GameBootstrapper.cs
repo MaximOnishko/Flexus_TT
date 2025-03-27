@@ -3,17 +3,17 @@ using UnityEngine;
 
 namespace CodeBase.Infrastructure
 {
-  public class GameBootstrapper : MonoBehaviour, ICoroutineRunner
-  {
-    [SerializeField] private HUDLoading hudLoading;
-    private Game _game;
-    
-    private void Awake()
+    public class GameBootstrapper : MonoBehaviour, ICoroutineRunner
     {
-      _game = new Game(this, hudLoading);
-      _game.StateMachine.Enter<BootstrapState>();
+        [SerializeField] private HUDLoading hudLoading;
+        private Game _game;
 
-      DontDestroyOnLoad(this);
+        private void Awake()
+        {
+            _game = new Game(this, hudLoading);
+            _game.StateMachine.Enter<BootstrapState>();
+
+            DontDestroyOnLoad(this);
+        }
     }
-  }
 }

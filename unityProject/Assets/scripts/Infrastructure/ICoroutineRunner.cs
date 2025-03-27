@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using CodeBase.Infrastructure.Services;
 using UnityEngine;
 
 namespace CodeBase.Infrastructure
 {
-  public interface ICoroutineRunner
-  {
-    Coroutine StartCoroutine(IEnumerator coroutine);
-  }
+    public interface ICoroutineRunner : IService
+    {
+        Coroutine StartCoroutine(IEnumerator coroutine);
+    }
 }

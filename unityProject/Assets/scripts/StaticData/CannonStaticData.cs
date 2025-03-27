@@ -11,6 +11,7 @@ namespace CodeBase.StaticData
         [field: SerializeField] public float BounceDamping { get; private set; }
         [field: SerializeField] public float TimeStep { get; private set; }
         [field: SerializeField] public LayerMask CollisionLayers { get; private set; }
-        [field: SerializeField] public float BulletSpeed { get; private set; }
+        [field: SerializeField] public BulletStaticData BulletStaticData { get; private set; }
+        
     }
 }

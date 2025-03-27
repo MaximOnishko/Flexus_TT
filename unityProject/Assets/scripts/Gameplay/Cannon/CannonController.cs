@@ -2,7 +2,8 @@
 using CodeBase.Infrastructure.Services;
 using CodeBase.Infrastructure.Services.UI;
 using CodeBase.StaticData;
-using OpenCover.Framework.Model;
+using Gameplay.Bullet.BulletService;
+using Infrastructure.Services.CustomPhysics;
 using UnityEngine;
 
 namespace Cannon
@@ -12,7 +13,8 @@ namespace Cannon
         private readonly IInputService _inputService;
         private readonly ICustomPhysicsService _customPhysics;
         private readonly IUIService _uiService;
-        
+        private readonly IBulletService _bulletService;
+
         private CannonView _view;
         private CannonData _data;
 
@@ -21,16 +23,17 @@ namespace Cannon
             _uiService = AllServices.Container.Single<IUIService>();
             _inputService = AllServices.Container.Single<IInputService>();
             _customPhysics = AllServices.Container.Single<ICustomPhysicsService>();
-            
+            _bulletService = AllServices.Container.Single<IBulletService>();
+
             Subscribe();
         }
 
-        public void Init(CannonView view,CannonStaticData staticData)
+        public void Init(CannonView view, CannonStaticData staticData)
         {
             _view = view;
             _data = new CannonData(staticData.BasePower);
         }
-        
+
         private void Subscribe()
         {
             _inputService.OnClickFire += Fire;
@@ -40,7 +43,9 @@ namespace Cannon
 
         private void Fire()
         {
-            
+            _bulletService.Fire(
+                _customPhysics.GetTrajectoryData(_view.SpawnBulletPos.position, _view.SpawnBulletPos.forward,
+                    _data.Power), _data.Power);
         }
 
         private void RotateCannon(Vector2 pointPos)
@@ -48,7 +53,7 @@ namespace Cannon
             _view.RotateTo(pointPos);
             UpdateTrajectory();
         }
-        
+
         private void UpdatePower(float sliderVal)
         {
             _data.UpdatePower(sliderVal);
@@ -57,8 +62,8 @@ namespace Cannon
 
         private void UpdateTrajectory()
         {
-            _customPhysics.UpdateTrajectory(_view.SpawnBulletPos.position, _view.SpawnBulletPos.forward, _data.Power);
-            _view.TrajectoryView.UpdateTrajectory(_customPhysics.TrajectoryData);
+            _view.TrajectoryView.UpdateTrajectory(_customPhysics.GetTrajectoryData(_view.SpawnBulletPos.position,
+                _view.SpawnBulletPos.forward, _data.Power));
         }
     }
 }

@@ -1,89 +1,79 @@
-using CodeBase.Infrastructure.Services;
 using CodeBase.StaticData;
 using UnityEngine;
 
-public interface ICustomPhysicsService : IService
+namespace Infrastructure.Services.CustomPhysics
 {
-    TrajectoryData TrajectoryData { get; }
-    public void UpdateTrajectory(Vector3 startPos, Vector3 direction, float power);
-    public void Init(CannonStaticData getStaticData);
-}
-
-public class TrajectoryData
-{
-    public Vector3[] Points;
-    public HitData[] HitDatas;
-    
-    public int FirstHitIndex;
-    public int LastHitIndex;
-
-    public TrajectoryData(int range, int bouncesAmount)
+    public class CustomPhysicsService : ICustomPhysicsService
     {
-        Points = new Vector3[range];
-        HitDatas = new HitData[bouncesAmount];
-    }
-    
-    public class HitData
-    {
-        public Vector2 UV;
-        public int TrajectoryIndex;
-    }
-}
+        private readonly Vector3 _gravity = new(0, -9.81f, 0);
 
-public class CustomPhysicsService : ICustomPhysicsService
-{
-    private readonly Vector3 _gravity = new(0, -9.81f, 0);
-    
-    public TrajectoryData TrajectoryData =>
-        _trajectoryData;
-    
-    private TrajectoryData _trajectoryData;
-    private CannonStaticData _cannonStaticData;
+        private CannonStaticData _cannonStaticData;
 
-    public void Init(CannonStaticData cannonStaticData)
-    {
-        _cannonStaticData = cannonStaticData;
-        _trajectoryData = new TrajectoryData(cannonStaticData.Range, cannonStaticData.BouncesAmount);
-    }
-
-    public void UpdateTrajectory(Vector3 startPos, Vector3 direction, float power)
-    {
-        Vector3 velocity = direction.normalized * power;
-        Vector3 currentPosition = startPos;
-        int bounceCount = 0;
-
-        for (int i = 0; i < _trajectoryData.Points.Length; i++)
+        public void Init(CannonStaticData cannonStaticData)
         {
-            _trajectoryData.Points[i] = currentPosition;
-            Vector3 nextPosition = currentPosition + velocity * _cannonStaticData.TimeStep;
+            _cannonStaticData = cannonStaticData;
+        }
 
-            if (bounceCount == _cannonStaticData.BouncesAmount)
+        public TrajectoryData GetTrajectoryData(Vector3 startPos, Vector3 direction, float power)
+        {
+            TrajectoryData trajectoryData = new TrajectoryData(_cannonStaticData.Range, _cannonStaticData.BouncesAmount)
             {
-                _trajectoryData.LastHitIndex = i;
-                break;
-            }
+                LastHitIndex = _cannonStaticData.Range - 1
+            };
 
-            if (bounceCount < _cannonStaticData.BouncesAmount && Physics.Raycast(currentPosition, velocity.normalized, out RaycastHit hit,
-                    (nextPosition - currentPosition).magnitude, _cannonStaticData.CollisionLayers))
+            Vector3 velocity = direction.normalized * power;
+            Vector3 currentPosition = startPos;
+            int bounceCount = 0;
+
+            for (int i = 0; i < trajectoryData.Points.Length; i++)
             {
-                _trajectoryData.Points[i] = hit.point;
-                _trajectoryData.HitDatas[bounceCount] = new TrajectoryData.HitData
+                trajectoryData.Points[i] = currentPosition;
+                Vector3 nextPosition = currentPosition + velocity * _cannonStaticData.TimeStep;
+
+                if (bounceCount == _cannonStaticData.BouncesAmount)
                 {
-                    UV = hit.textureCoord,
-                    TrajectoryIndex = i
-                };
+                    trajectoryData.LastHitIndex = i;
+                    break;
+                }
 
-                if (bounceCount == 0)
-                    _trajectoryData.FirstHitIndex = i;
-                
-                velocity = Vector3.Reflect(velocity, hit.normal) * _cannonStaticData.BounceDamping;
-                currentPosition = hit.point + hit.normal * 0.01f;
-                bounceCount++;
+                if (bounceCount < _cannonStaticData.BouncesAmount && Physics.Raycast(currentPosition,
+                        velocity.normalized, out RaycastHit hit,
+                        (nextPosition - currentPosition).magnitude, _cannonStaticData.CollisionLayers))
+                {
+                    trajectoryData.Points[i] = hit.point;
+
+                    AddHitData(hit, ref trajectoryData, bounceCount, i);
+
+                    if (bounceCount == 0)
+                        trajectoryData.FirstHitIndex = i;
+
+                    velocity = Vector3.Reflect(velocity, hit.normal) * _cannonStaticData.BounceDamping;
+                    currentPosition = hit.point + hit.normal * 0.01f;
+                    bounceCount++;
+                }
+                else
+                {
+                    currentPosition = nextPosition;
+                    velocity += _gravity * _cannonStaticData.TimeStep;
+                }
             }
-            else
+
+            return trajectoryData;
+        }
+
+        private void AddHitData(RaycastHit collision, ref TrajectoryData trajectoryData, int bounceCount, int i)
+        {
+            Vector3 direction = (collision.point - Camera.main.transform.position).normalized;
+
+            if (Physics.Raycast(Camera.main.transform.position, direction, out RaycastHit hit, 100f,
+                    _cannonStaticData.BulletStaticData.HitLayer))
             {
-                currentPosition = nextPosition;
-                velocity += _gravity * _cannonStaticData.TimeStep;
+                trajectoryData.HitDatas[bounceCount] = new TrajectoryData.HitData
+                {
+                    UV = new Vector2(hit.textureCoord.x, 1 - hit.textureCoord.y),
+                    TrajectoryIndex = i,
+                    Collider = hit.collider
+                };
             }
         }
     }
