@@ -43,6 +43,7 @@ namespace Cannon
 
         private void Fire()
         {
+            _view.Animator.PlayAttack();
             _bulletService.Fire(
                 _customPhysics.GetTrajectoryData(_view.SpawnBulletPos.position, _view.SpawnBulletPos.forward,
                     _data.Power), _data.BulletSpeed);
