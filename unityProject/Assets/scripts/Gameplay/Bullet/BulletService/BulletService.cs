@@ -22,12 +22,12 @@ namespace Gameplay.Bullet.BulletService
             _mover.OnMoveEnded += MoveEnded;
         }
 
-        public void Fire(TrajectoryData trajectoryData, float power)
+        public void Fire(TrajectoryData trajectoryData, float speed)
         {
             _mover.Move(
                 _pool.GetBullet(trajectoryData.Points[0]),
                 trajectoryData,
-                power);
+                speed);
         }
 
         private void BulletHit(TrajectoryData.HitData hitData)

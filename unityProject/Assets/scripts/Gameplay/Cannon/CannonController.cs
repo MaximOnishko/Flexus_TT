@@ -31,7 +31,7 @@ namespace Cannon
         public void Init(CannonView view, CannonStaticData staticData)
         {
             _view = view;
-            _data = new CannonData(staticData.BasePower);
+            _data = new CannonData(staticData.BasePower, staticData.BulletStaticData.PowerToSpeedMultiplier);
         }
 
         private void Subscribe()
@@ -45,7 +45,7 @@ namespace Cannon
         {
             _bulletService.Fire(
                 _customPhysics.GetTrajectoryData(_view.SpawnBulletPos.position, _view.SpawnBulletPos.forward,
-                    _data.Power), _data.Power);
+                    _data.Power), _data.BulletSpeed);
         }
 
         private void RotateCannon(Vector2 pointPos)

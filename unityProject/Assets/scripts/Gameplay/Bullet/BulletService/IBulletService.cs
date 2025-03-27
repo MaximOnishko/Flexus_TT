@@ -5,6 +5,6 @@ namespace Gameplay.Bullet.BulletService
 {
     public interface IBulletService : IService
     {
-        void Fire(TrajectoryData trajectoryData, float power);
+        void Fire(TrajectoryData trajectoryData, float bulletSpeed);
     }
 }

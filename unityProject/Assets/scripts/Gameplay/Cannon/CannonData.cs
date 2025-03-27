@@ -3,10 +3,16 @@
 public class CannonData
 {
     public float Power { get; private set; }
-    
+
+    public float BulletSpeed =>
+        Power * _speedMultiplier;
+
     private readonly float _basePower;
-    public CannonData(float basePower)
+    private readonly float _speedMultiplier;
+
+    public CannonData(float basePower, float speedMultiplier)
     {
+        _speedMultiplier = speedMultiplier;
         _basePower = basePower;
         Power = _basePower;
     }

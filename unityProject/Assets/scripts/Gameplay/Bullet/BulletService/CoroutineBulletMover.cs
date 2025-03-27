@@ -20,9 +20,9 @@ namespace Gameplay.Bullet.BulletService
             _coroutineRunner = AllServices.Container.Single<ICoroutineRunner>();
         }
 
-        public void Move(BulletView view, TrajectoryData trajectoryData, float power)
+        public void Move(BulletView view, TrajectoryData trajectoryData, float speed)
         {
-            _coroutineRunner.StartCoroutine(MoveCoroutine(view, trajectoryData, power));
+            _coroutineRunner.StartCoroutine(MoveCoroutine(view, trajectoryData, speed));
         }
 
         private IEnumerator MoveCoroutine(BulletView view, TrajectoryData trajectoryData, float speed)
