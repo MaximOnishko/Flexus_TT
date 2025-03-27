@@ -9,6 +9,7 @@ using CodeBase.Infrastructure.Services.UI;
 using CodeBase.StaticData;
 using Gameplay.Bullet.BulletService;
 using Gameplay.BulletFactory;
+using Gameplay.FxPool;
 using Infrastructure.Services.CustomPhysics;
 
 namespace CodeBase.Infrastructure.States
@@ -51,17 +52,28 @@ namespace CodeBase.Infrastructure.States
             _services.RegisterSingle<IDataService>(new DataService());
             _services.RegisterSingle<IGameStateMachine>(_stateMachine);
             _services.RegisterSingle<IAssetProvider>(new AssetProvider());
+
             _services.RegisterSingle<IGameFactory>(new GameFactory(_services.Single<IAssetProvider>(),
                 _services.Single<IStaticDataService>()));
+
             _services.RegisterSingle<ICameraService>(new CameraService());
             _services.RegisterSingle<ICustomPhysicsService>(new CustomPhysicsService());
             _services.RegisterSingle<IUIService>(new UIService());
             _services.RegisterSingle<IInputService>(new StandaloneInput());
             _services.RegisterSingle<IProceduralMeshService>(new ProceduralMeshService());
+
+
             _services.RegisterSingle<IBulletPool>(new BulletPoolService(_services.Single<IGameFactory>(),
                 _services.Single<IProceduralMeshService>(), _services.Single<IStaticDataService>()));
-            _services.RegisterSingle<IDrawerService>(new RenderTextureDrawerService(_services.Single<IStaticDataService>()));
-            _services.RegisterSingle<IBulletService>(new BulletService());
+
+            _services.RegisterSingle<IFxPoolService>(new FxPoolService(_services.Single<IGameFactory>()));
+
+            _services.RegisterSingle<IDrawerService>(
+                new RenderTextureDrawerService(_services.Single<IStaticDataService>()));
+
+            _services.RegisterSingle<IBulletService>(new BulletService(_services.Single<IBulletPool>(),
+                _services.Single<IFxPoolService>(),
+                _services.Single<IDrawerService>(), _services.Single<ICoroutineRunner>()));
         }
     }
 }
