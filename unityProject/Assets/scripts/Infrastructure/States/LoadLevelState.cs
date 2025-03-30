@@ -60,10 +60,11 @@ namespace CodeBase.Infrastructure.States
         {
             LevelStaticData levelData = LevelStaticData();
 
+            _customPhysicsService.Init(_staticData.GetStaticData<CannonStaticData>());
+            
             _cannonController = _gameFactory.GetCannon(levelData.CannonSpawnPos);
             _gameFactory.Instantiate(AssetsAddress.ObstaclesPath, levelData.ObstacleSpawnPos);
             
-            _customPhysicsService.Init(_staticData.GetStaticData<CannonStaticData>());
             _bulletPool.Init();
             _fxPoolService.Init();
             

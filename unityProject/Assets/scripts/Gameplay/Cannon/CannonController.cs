@@ -1,4 +1,5 @@
-﻿using CodeBase.Infrastructure;
+﻿using System.Collections;
+using CodeBase.Infrastructure;
 using CodeBase.Infrastructure.Services;
 using CodeBase.Infrastructure.Services.Camera;
 using CodeBase.Infrastructure.Services.UI;
@@ -16,6 +17,7 @@ namespace Cannon
         private readonly IUIService _uiService;
         private readonly IBulletService _bulletService;
         private readonly ICameraService _cameraService;
+        private readonly ICoroutineRunner _coroutineRunner;
 
         private CannonView _view;
         private CannonData _data;
@@ -27,6 +29,7 @@ namespace Cannon
             _inputService = AllServices.Container.Single<IInputService>();
             _customPhysics = AllServices.Container.Single<ICustomPhysicsService>();
             _bulletService = AllServices.Container.Single<IBulletService>();
+            _coroutineRunner = AllServices.Container.Single<ICoroutineRunner>();
 
             Subscribe();
         }
@@ -35,6 +38,8 @@ namespace Cannon
         {
             _view = view;
             _data = new CannonData(staticData.BasePower, staticData.BulletStaticData.PowerToSpeedMultiplier);
+            
+            _coroutineRunner.StartCoroutine(UpdateTrajectory());
         }
 
         private void Subscribe()
@@ -57,19 +62,27 @@ namespace Cannon
         private void RotateCannon(Vector2 pointPos)
         {
             _view.RotateTo(pointPos);
-            UpdateTrajectory();
         }
 
         private void UpdatePower(float sliderVal)
         {
             _data.UpdatePower(sliderVal);
-            UpdateTrajectory();
         }
 
-        private void UpdateTrajectory()
+        // private void UpdateTrajectory()
+        // {
+        //     _view.TrajectoryView.UpdateTrajectory(_customPhysics.GetTrajectoryData(_view.SpawnBulletPos.position,
+        //         _view.SpawnBulletPos.forward, _data.Power));
+        // }
+
+        private IEnumerator UpdateTrajectory()
         {
-            _view.TrajectoryView.UpdateTrajectory(_customPhysics.GetTrajectoryData(_view.SpawnBulletPos.position,
-                _view.SpawnBulletPos.forward, _data.Power));
+            while (true)
+            {
+                _view.TrajectoryView.UpdateTrajectory(_customPhysics.GetTrajectoryData(_view.SpawnBulletPos.position,
+                    _view.SpawnBulletPos.forward, _data.Power));
+                yield return new WaitForSeconds(0.01f);
+            }
         }
     }
 }
